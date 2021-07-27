@@ -4,7 +4,7 @@ function OPT=OPTparse(OPT,fldsI)
     ind=~ismember(flds,fldsI);
     if any(ind)
         disp('Unrecognized option category')
-        printCellList(flds(ind),4);
+        Cell.print(flds(ind),4);
         error('See above')
     end
 

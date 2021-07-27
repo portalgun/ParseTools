@@ -68,7 +68,7 @@ function obj=parse(obj,Opts,names,defaults,tests,rmflds,bIgnore,bQuiet)
     for i = 1:size(names,1)
         p.addParameter(names{i},defaults{i},tests{i});
     end
-    obj=parseObj(obj,Opts,p,bIgnore,bQuiet);
+    obj=Parse.toObj(obj,Opts,p,bIgnore,bQuiet);
 
     em=cellfun(@isempty,sizes);
     for i = 1:length(names)
@@ -77,7 +77,7 @@ function obj=parse(obj,Opts,names,defaults,tests,rmflds,bIgnore,bQuiet)
         end
 
         sz=size(obj.(names{i}));
-        str=['Size of option ' names{i} ' (' num2strSane(sz) ') does not match parser value size ( ' num2strSane(sizes{i}) ' ).'];
+        str=['Size of option ' names{i} ' (' Num.toStr(sz) ') does not match parser value size ( ' Num.toStr(sizes{i}) ' ).'];
         assert( isequal( sz ,sizes{i}), str);
     end
 
@@ -85,15 +85,15 @@ end
 function out=istrue(varargin)
     out=1;
 end
-%% INT
 function out=isLorRorB(in)
     out=ismember(in,{'L','R','B'});
 end
-function out=isint_e(in)
-    out=isint(in) || isempty(in);
+%% INT
+function out=isInt_e(in)
+    out=Num.isInt(in) || isempty(in);
 end
 function out=isallint(in)
-    out=all(isint(in(:)));
+    out=all(Num.isInt(in(:)));
 end
 function out=isallint_e(in)
     out=all(isempty(in) || isallint(in));
@@ -122,23 +122,23 @@ function out=isallnum2_e(in)
 end
 
 function out=isallint2(in)
-    out=all(isint(in),'all') && numel(in)==2;
+    out=all(Num.isInt(in),'all') && numel(in)==2;
 end
 function out=isallint3(in)
-    out=all(isint(in),'all') && numel(in)==3;
+    out=all(Num.isInt(in),'all') && numel(in)==3;
 end
 function out=isallint1(in)
-    out=all(isint(in)) && numel(in)==1;
+    out=all(Num.isInt(in)) && numel(in)==1;
 end
 function out=isallint1or2(in)
     out=isallint1(in) | isallint2(in);
 end
 function out=isallint1orempty(in)
-    out=isempty(in) || (all(isint(in)) && numel==1);
+    out=isempty(in) || (all(Num.isInt(in)) && numel==1);
 end
 function out=iscellstruct(in)
 %FROM iscellstruct.m
-    if ~iscell(in) || isemptyall(in)
+    if ~iscell(in) || all(isempty(in),'all')
         out=0;
         return
     end
